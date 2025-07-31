@@ -111,6 +111,15 @@ def utm_to_latlon(este, norte, zona_utm, hemisferio='n'):
 #     print(f"Latitud: {lat:.6f}, Longitud: {lon:.6f}")
 
 
+class linea_tus:
+  def __init__(self, linea, vehiculo, lat, lon, coordx, coordy):
+     self.linea = linea
+     self.vehiculo = vehiculo
+     self.lat = lat
+     self.lon = lon
+     self.coordx = coordx
+     self.coordy = coordy
+
 def load_animation(): 
   for c in itertools.cycle(['|', '/', '-', '\\']):
     if done:
@@ -134,6 +143,7 @@ def main():
     # animation_thread = threading.Thread(target=load_animation)
     # animation_thread.start()
     
+    found_vehicles = []
     
     # make a request to the URL every second 
     while (True):
@@ -145,29 +155,27 @@ def main():
                 resources = data.get("resources", [])
                 
                 #DATA PROCESSING
-                
                 linea_coords = {}
                 linea_last_coords = {}
                 for resource in resources:
-                  linea = resource.get("ayto:linea", "")
-                  lat = resource.get("gn:coordX", None)
-                  lon = resource.get("gn:coordY", None)
-                  if linea and lat and lon: #if linea, lat and lon are not empty
-                    try:
-                      lat = float(lat)
-                      lon = float(lon)
-                      linea_coords[linea] = (lat, lon)                      
-                    except ValueError:
-                      continue
+                    linea = resource.get("ayto:linea", "")
+                    vehiculo = resource.get("ayto:vehiculo", "")
+                    lat = resource.get("wgs84_pos:lat", "")
+                    lon = resource.get("wgs84_pos:long", "")
+                    coordx = resource.get("gn:coordX", "")
+                    coordy = resource.get("gn:coordY", "")
                     
-                print(f"Lineas found: {len(linea_coords)}")
-                for linea, coords in linea_coords.items():
-                    lat, lon = coords
-                    
-                    #if the linea last coords are the same as the current coords, skip it
-                    if linea in linea_last_coords and linea_last_coords[linea] == (lat, lon):
-                        continue                    
-                    print(f"Linea {linea}: Lat {lat}, Lon {lon}")
+                    #create a linea_tus object with the gathered data
+                    linea_obj = linea_tus(linea, vehiculo, lat, lon, coordx, coordy)
+                    # print(f"Linea: {linea_obj.linea}, Vehiculo: {linea_obj.vehiculo}, Lat: {linea_obj.lat}, Lon: {linea_obj.lon}, CoordX: {linea_obj.coordx}, CoordY: {linea_obj.coordy}")
+                    #check if the vehiculo is already in the dictionary
+                    if vehiculo not in found_vehicles:
+                        found_vehicles.append(vehiculo)
+                        # print(f"New vehicle detected: {vehiculo}")
+                        logger.info(f"New vehicle detected: {vehiculo} on line {linea}")
+                        print(f"New vehicle detected: {vehiculo} on line {linea}")
+                        
+
                 
                 # for resource in resources:
                 #     # cheak if the line is already in the list if it is not add it
@@ -190,7 +198,7 @@ def main():
             print(f"An error occurred: {e}")
             done = True
         
-        time.sleep(1)
+        time.sleep(0.5)
         
 
 if __name__ == "__main__":
