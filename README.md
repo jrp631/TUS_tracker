@@ -50,4 +50,29 @@ TUS provides a public API that allows users to access real-time data about bus l
 
 **Lineas disponibles**: 1,2,3,4,5C1,5C2,6C1,6C2,7C1,7C2,11,12,13,14,15,16,17,18,24C1,24C2,99,E1,N1,N2,N3
 
-diccionario con las lineas {lineas, posiciones[NUMERO_AUTOBUSES_DE_LINEA]}
+| **Numero Linea** | **Codigo en JSON** |
+|------------------|--------------------|
+| 1                | 1                  |
+| 2                | 2                  |
+| 3                | 3                  |
+| 4                | 4                  |
+| 5c1              | 51                 |
+| 5c2              | 52                 |
+| 6c1              | 61                 |
+| 6c2              | 62                 |
+| 7c1              | 71                 |
+| 7c2              | 72                 |
+| 11               | 11                 |
+| 12               | 12                 |
+| 13               | 13                 |
+| 14               | 14                 |
+| 15               | 15                 |
+| 16               | 16                 |
+| 17               | 17                 |
+| 18               | 18                 |
+| LC               | 100                |
+| 99               | 99                 |
+| 24c1             | 241                |
+| 24c2             | 242                |
+
+
